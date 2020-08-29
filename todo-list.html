@@ -1,0 +1,162 @@
+<link rel="import" href="../polymer/polymer-element.html" />
+
+<dom-module id="todo-list">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 20px;
+      }
+      .content{
+        display: grid;
+      }
+      .title-bar {
+        margin-top: 20px !important;
+        background-color: rgb(44, 241, 37);
+        border-top-right-radius: 20px;
+        border-top-left-radius: 20px;
+        padding: 15px;
+      }
+      .title-bar p {
+        font-size: 15px;
+        display: inline;
+      }
+
+      .title-bar img {
+        margin-top: -10px;
+        max-width: 35px;
+        float: right;
+        cursor: pointer;
+        transition: 300ms all;
+      }
+
+      .title-bar img:hover {
+        transform: scale(1.5);
+      }
+      .todoList {
+        background-color: white;
+        border-bottom-right-radius: 20px;
+        border-bottom-left-radius: 20px;
+        text-align: center;
+      }
+      
+      .itemText {
+        float: left;
+        width: 90% !important;
+        text-align: start;
+        padding: 10px;
+        border-bottom: 1px solid #c3c3c3;
+        overflow-wrap: break-word;
+        color: black !important;
+      }
+      @media (max-width: 1105px){
+        .itemText{
+          width: 90% !important;
+        }   
+      }
+
+      @media (max-width: 750px){
+          .itemText{
+              width: 83% !important;
+          }   
+      }
+
+      @media (max-width: 410px){
+          .itemText{
+              width: 70% !important;
+          }   
+      }
+      .item .img{
+        max-width: 25px;
+        float: right;
+        cursor: pointer;
+        transition: 300ms all;
+        padding-top: 10px;
+        padding-right: 5px;
+      }
+
+      .item .img:hover{
+          transform: scale(1.5);
+      }
+    </style>
+    <div class="content">
+      <div class="title-bar">
+        <p><strong>[[title]]</strong></p>
+        <img src="../img/recycle-bin.svg" title="Borrar toda la lista." />
+      </div>
+  
+      <div id="todo" class="todoList">
+  
+        <template is="dom-if" if="[[!todolist.length]]">
+          <p><strong>{{emptyText}}</strong></p>
+        </template>
+  
+        <template is="dom-if" if="{{todolist.length}}">
+          <template is="dom-repeat" items="{{todolist}}">
+              <div class="item">
+                  <div class="itemText">{{getIndex(index)}}. {{item}}</div>
+                  <div>
+                    <img id="img" class="img" src="../img/remove.svg" title="Eliminar tarea" /></div>
+              </div>
+          </template>
+        </template>
+      </div>
+    </template>
+    </div>
+
+  <script>
+    /**
+     * `todo-list`
+     * Todo list componente
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class TodoList extends Polymer.Element {
+      static get is() {
+        return "todo-list";
+      }
+      static get properties() {
+        return {
+          emptyText: {
+            type: String,
+            value: "No hay ToDo's, tómate un café!",
+          },
+          title: {
+            type: String,
+            value: "ToDo list by Iron Bit",
+          },
+          todolist: {
+            type: Array,
+            value: []
+          },
+        };
+      }
+      ready() {
+        super.ready();
+      }
+
+      agregarTarea(tarea) {
+        this.todolist.push(tarea);
+      }
+
+      eliminarTarea(intIndice)
+        {
+          const diferenteIndice = (item,idx) => idx !== intIndice;
+          this.todolist = this.todolist.filter(diferenteIndice);
+        }
+
+      eliminarTodaTarea(){
+        this.todolist = [];
+      }
+
+      getIndex(index){
+        return index + 1;
+      }
+    }
+
+    window.customElements.define(TodoList.is, TodoList);
+  </script>
+</dom-module>
