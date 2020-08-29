@@ -13,7 +13,7 @@
       }
       .title-bar {
         margin-top: 20px !important;
-        background-color: rgb(44, 241, 37);
+        background-color:#9ffb38;
         border-top-right-radius: 20px;
         border-top-left-radius: 20px;
         padding: 15px;
@@ -35,7 +35,7 @@
         transform: scale(1.5);
       }
       .todoList {
-        background-color: white;
+        background-color: #f1faf2;
         border-bottom-right-radius: 20px;
         border-bottom-left-radius: 20px;
         text-align: center;
@@ -46,6 +46,7 @@
         width: 90% !important;
         text-align: start;
         padding: 10px;
+        font-size: 18px;
         border-bottom: 1px solid #c3c3c3;
         overflow-wrap: break-word;
         color: black !important;
@@ -83,7 +84,7 @@
     <div class="content">
       <div class="title-bar">
         <p><strong>[[title]]</strong></p>
-        <img src="../img/recycle-bin.svg" title="Borrar toda la lista." />
+        <img src="https://firebasestorage.googleapis.com/v0/b/workshop-polymer.appspot.com/o/recycle-bin.svg?alt=media&token=ad3b9d8b-3456-4e21-b0df-ff6b84d12808" title="Borrar toda la lista." on-click="eliminarTodaTarea"/>
       </div>
   
       <div id="todo" class="todoList">
@@ -93,11 +94,11 @@
         </template>
   
         <template is="dom-if" if="{{todolist.length}}">
-          <template is="dom-repeat" items="{{todolist}}">
+          <template id="lista" is="dom-repeat" items="{{todolist}}">
               <div class="item">
                   <div class="itemText">{{getIndex(index)}}. {{item}}</div>
                   <div>
-                    <img id="img" class="img" src="../img/remove.svg" title="Eliminar tarea" /></div>
+                    <img id="img" id="item{{index}}" class="img" src="https://firebasestorage.googleapis.com/v0/b/workshop-polymer.appspot.com/o/remove.svg?alt=media&token=d199207d-9722-41e4-935c-2dc2a1df8e62" title="Eliminar tarea" on-click="eliminarTarea"/></div>
               </div>
           </template>
         </template>
@@ -134,22 +135,27 @@
           },
         };
       }
-      ready() {
-        super.ready();
+      constructor(){
+        super();
+        this.todolist = localStorage.getItem('todolist');
       }
 
       agregarTarea(tarea) {
-        this.todolist.push(tarea);
+        this.push('todolist',tarea);
+        //localStorage.setItem('todolist',this.todolist);
       }
 
-      eliminarTarea(intIndice)
+      eliminarTarea(e)
         {
+          let intIndice = e.model.index;
           const diferenteIndice = (item,idx) => idx !== intIndice;
           this.todolist = this.todolist.filter(diferenteIndice);
+          this.todolist = this.todolist.slice();
         }
 
       eliminarTodaTarea(){
         this.todolist = [];
+        this.todolist = this.todolist.slice();
       }
 
       getIndex(index){
