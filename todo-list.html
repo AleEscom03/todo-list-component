@@ -82,7 +82,7 @@
           transform: scale(1.5);
       }
     </style>
-    <iron-localstorage name="frontend-test-localstorage" value="{{todolist}}"></iron-localstorage>
+    <iron-localstorage name="frontend-test-localstorage" value="{{todolist}}" iron-localstorage-load-empty="inicializa"></iron-localstorage>
     <div class="content">
       <div class="title-bar">
         <p><strong>[[title]]</strong></p>
@@ -139,12 +139,13 @@
       }
       constructor(){
         super();
-        this.todolist = localStorage.getItem('todolist');
+        if(localStorage.getItem('frontend-test-localstorage') == null){
+          localStorage.setItem('frontend-test-localstorage',JSON.stringify([]));
+        }
       }
 
       agregarTarea(tarea) {
         this.push('todolist',tarea);
-        //localStorage.setItem('todolist',this.todolist);
       }
 
       eliminarTarea(e)
